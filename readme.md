@@ -1,6 +1,8 @@
 # Acme Ackermann Controller
 [![Build Status](https://travis-ci.org/Lbarret/acme_ackermann_controller.svg?branch=master)](https://travis-ci.org/Lbarret/acme_ackermann_controller)
 [![Coverage Status](https://coveralls.io/repos/github/Lbarret/acme_ackermann_controller/badge.svg?branch=master)](https://coveralls.io/github/Lbarret/acme_ackermann_controller?branch=master)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ---
 
 ## Overview
