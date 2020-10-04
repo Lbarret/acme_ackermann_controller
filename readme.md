@@ -1,6 +1,6 @@
-# C++ Boilerplate
-[![Build Status](https://travis-ci.org/Lbarret/acme_manipulator.svg?branch=master)](https://travis-ci.org/Lbarret/acme_manipulator)
-[![Coverage Status](https://coveralls.io/repos/github/Lbarret/acme_manipulator/badge.svg?branch=master)](https://coveralls.io/github/Lbarret/acme_manipulator?branch=master)
+# Acme Ackermann Controller
+[![Build Status](https://travis-ci.org/Lbarret/acme_ackermann_controller.svg?branch=master)](https://travis-ci.org/Lbarret/acme_ackermann_controller)
+[![Coverage Status](https://coveralls.io/repos/github/Lbarret/acme_ackermann_controller/badge.svg?branch=master)](https://coveralls.io/github/Lbarret/acme_ackermann_controller?branch=master)
 ---
 
 ## Overview
