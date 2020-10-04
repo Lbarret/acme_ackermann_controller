@@ -1,6 +1,6 @@
 # C++ Boilerplate
-[![Build Status](https://travis-ci.org/dpiet/cpp-boilerplate.svg?branch=master)](https://travis-ci.org/dpiet/cpp-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/dpiet/cpp-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/dpiet/cpp-boilerplate?branch=master)
+[![Build Status](https://travis-ci.org/Lbarret/acme_manipulator.svg?branch=master)](https://travis-ci.org/Lbarret/acme_manipulator)
+[![Coverage Status](https://coveralls.io/repos/github/Lbarret/acme_manipulator/badge.svg?branch=master)](https://coveralls.io/github/Lbarret/acme_manipulator?branch=master)
 ---
 
 ## Overview
