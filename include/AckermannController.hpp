@@ -14,6 +14,8 @@ public:
 	double GetDesiredHeading();
 	void CalculateVehicleSpeed();
 	void CalculateVehicleHeading();
+	void CalculateWheelVelocities(double req_speed);
+	void CalculateWheelAngles(double req_heading);
 	void Solve();
 	Robot car;
 	PID velocity_control;

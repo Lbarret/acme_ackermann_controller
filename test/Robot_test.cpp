@@ -12,13 +12,3 @@ TEST(Robot_test, robot_constructor_test) {
   EXPECT_DOUBLE_EQ(4, robot1.GetLeftVel());
   EXPECT_DOUBLE_EQ(5, robot1.GetRightVel());
 }
-
-TEST(Robot_test, robot_CalculateSpeed){
-  robot1.CalculateVehicleSpeed();
-  EXPECT_DOUBLE_EQ(0, robot1.GetSpeed());
-}
-
-TEST(Robot_test, robot_CalculateHeading){
-  robot1.CalculateVehicleHeading();
-  EXPECT_DOUBLE_EQ(0, robot1.GetHeading());
-}

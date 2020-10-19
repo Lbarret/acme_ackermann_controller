@@ -30,8 +30,8 @@ public:
  void SetLeftAngle(double left_angle);
  double GetRightAngle();
  void SetRightAngle(double right_angle);
- void Robot::SetVehicleSpeed(double S);
- void Robot::SetVehicleHeading(double H);
+ void SetVehicleSpeed(double S);
+ void SetVehicleHeading(double H);
 private:
  double track_width;
  double wheelbase;
