@@ -3,6 +3,10 @@
 #include "../include/Robot.hpp"
 #include "../include/PID.hpp"
 
+AckermannController::AckermannController(){
+
+}
+
 AckermannController::AckermannController(Robot robot, PID vel_PID, PID heading_PID) {
 	car = robot;
 	velocity_control = vel_PID;
@@ -18,4 +22,12 @@ void AckermannController::SetDesiredHeading(double heading){
 }
 void AckermannController::Solve(){
 
+}
+
+double AckermannController::GetDesiredSpeed(){
+	return desired_speed;
+}
+
+double AckermannController::GetDesiredHeading(){
+	return desired_heading;
 }
