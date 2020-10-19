@@ -16,16 +16,22 @@
 class Robot {
 public:
  Robot();
- Robot(double width, double base, double size, double speed, double heading, double left_angle, double right_angle, double left_vel, double right_vel);
+ Robot(double width, double base, double size, double left_angle, double right_angle, double left_vel, double right_vel);
  double GetTrackWidth();
  double GetWheelBase();
  double GetWheelSize();
  double GetSpeed();
  double GetHeading();
  double GetLeftVel();
+ void SetLeftVel(double left_wheel_vel);
  double GetRightVel();
+ void SetRightVel(double right_wheel_vel);
  double GetLeftAngle();
+ void SetLeftAngle(double left_angle);
  double GetRightAngle();
+ void SetRightAngle(double right_angle);
+ void Robot::SetVehicleSpeed(double S);
+ void Robot::SetVehicleHeading(double H);
 private:
  double track_width;
  double wheelbase;

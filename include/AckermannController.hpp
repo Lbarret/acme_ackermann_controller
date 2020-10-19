@@ -12,10 +12,13 @@ public:
 	void SetDesiredHeading(double heading);
 	double GetDesiredSpeed();
 	double GetDesiredHeading();
+	void CalculateVehicleSpeed();
+	void CalculateVehicleHeading();
 	void Solve();
 	Robot car;
 	PID velocity_control;
 	PID heading_control;
+	double timestamp;
 private:
 
 	double desired_speed;

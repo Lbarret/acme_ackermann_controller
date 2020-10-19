@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "../include/AckermannController.hpp"
 #include "../include/Robot.hpp"
 #include "../include/PID.hpp"
@@ -30,4 +31,17 @@ double AckermannController::GetDesiredSpeed(){
 
 double AckermannController::GetDesiredHeading(){
 	return desired_heading;
+}
+
+void AckermannController::CalculateVehicleSpeed(){
+	car.SetVehicleSpeed((car.GetLeftVel()+car.GetRightVel())*car.GetWheelSize()*M_PI/2);
+}
+
+void AckermannController::CalculateVehicleHeading(){
+
+	car.SetVehicleHeading(car.GetHeading() + car.GetSpeed()/car.GetWheelBase()*(2*car.GetWheelBase()+car.GetTrackWidth() * atan(car.GetLeftAngle()*M_PI/180))/(2*car.GetWheelBase()*atan(car.GetLeftAngle()*M_PI/180))*timestamp);
+	if(desired_heading > 0){
+		car.SetVehicleHeading(-car.GetHeading());
+	}
+
 }

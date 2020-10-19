@@ -5,11 +5,11 @@
 
 PID vel_pid(0.1, 0.2, 0.3);
 PID head_pid(0.4, 0, 0.6);
-Robot robot2(1, 2, 3, 4, 30, 60, 70, 4, 5);
+Robot robot2(1, 2, 3, 60, 70, 4, 5);
 AckermannController control(robot2, vel_pid, head_pid);
 
 TEST(AckermannController_test, AckermannController_constructor_test) {
-	EXPECT_DOUBLE_EQ(30, control.car.GetHeading());
+	EXPECT_DOUBLE_EQ(1, control.car.GetTrackWidth());
 	EXPECT_DOUBLE_EQ(0.3, control.velocity_control.GetKd());
 	EXPECT_DOUBLE_EQ(0.6, control.heading_control.GetKd());
 }
