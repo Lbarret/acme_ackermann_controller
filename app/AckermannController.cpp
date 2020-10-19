@@ -17,10 +17,10 @@ AckermannController::AckermannController(Robot robot, PID vel_PID, PID heading_P
 	timestamp = .01;
 }
 void AckermannController::SetDesiredSpeed(double speed){
-
+desired_speed = speed;
 }
 void AckermannController::SetDesiredHeading(double heading){
-
+desired_heading = heading;
 }
 
 double AckermannController::GetDesiredSpeed(){
@@ -77,12 +77,13 @@ void AckermannController::CalculateWheelAngles(double req_heading){
 
 void AckermannController::Solve(){
 	double prev_error_vel = 0;
-	double current_error_vel = 1;
+	double current_error_vel = 0;
 	double prev_error_heading = 0;
-	double current_error_heading;
+	double current_error_heading = 0;
 	double req_heading = 0;
 	double req_vel = 0;
-	while(current_error_vel > .5 && current_error_heading > 5 && current_error_heading < 0){
+	bool flag = true;
+	while(flag){
 
 		prev_error_heading = current_error_heading;
 		current_error_heading = desired_heading - car.GetHeading();
@@ -98,6 +99,13 @@ void AckermannController::Solve(){
 		CalculateVehicleHeading();
 		std::cout << "Heading: " << car.GetHeading() << std::endl;
 		std::cout << "Speed: " << car.GetSpeed() << std::endl;
+
+		if (car.GetSpeed() > desired_speed){
+			car.SetVehicleSpeed(desired_speed);
+		}
+		if (car.GetHeading() - desired_heading < 5 ){
+			flag = false;
+		}
 	}
 }
 

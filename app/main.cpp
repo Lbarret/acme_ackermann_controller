@@ -1,8 +1,16 @@
 #include <iostream>
-#include <lib.hpp>
+#include "../include/Robot.hpp"
+#include "../include/PID.hpp"
+#include "../include/AckermannController.hpp"
 
 int main()
 {
-    dummy();
-    return 0;
+	Robot robo(.3, 1, .15, 0, 0, 0, 0);
+	PID vel_pid(.1, 0, .2);
+	PID head_pid(.1, 0, .2);
+	AckermannController control(robo,vel_pid, head_pid);
+	control.SetDesiredHeading(40);
+	control.SetDesiredSpeed(10);
+	control.Solve();
+
 }
