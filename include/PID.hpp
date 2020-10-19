@@ -4,6 +4,7 @@
 
 class PID {
 public:
+	PID();
 	PID(double prop_gain, double int_gain, double diff_gain);
 	double GetKp();
 	double GetKi();

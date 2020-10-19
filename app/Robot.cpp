@@ -10,7 +10,7 @@
  */
 #include "../include/Robot.hpp"
 #include <iostream>
-
+Robot::Robot(){}
 Robot::Robot(double width, double base, double size, double speed,
              double heading, double left_angle, double right_angle,
              double left_vel, double right_vel) {

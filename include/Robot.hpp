@@ -15,6 +15,7 @@
 
 class Robot {
 public:
+ Robot();
  Robot(double width, double base, double size, double speed, double heading, double left_angle, double right_angle, double left_vel, double right_vel);
  double GetTrackWidth();
  double GetWheelBase();
