@@ -38,29 +38,31 @@ void AckermannController::CalculateVehicleSpeed(){
 void AckermannController::CalculateVehicleHeading(){
 
 	car.SetVehicleHeading(car.GetHeading() + car.GetSpeed()/car.GetWheelBase()*(2*car.GetWheelBase()+car.GetTrackWidth() * atan(car.GetLeftAngle()*M_PI/180))/(2*car.GetWheelBase()*atan(car.GetLeftAngle()*M_PI/180))*timestamp);
-	if(desired_heading > 0){
+	/*if(desired_heading > 0){
 		car.SetVehicleHeading(-car.GetHeading());
-	}
+	}*/
 
 }
 
 void AckermannController::CalculateWheelVelocities(double req_speed){
 	double vehicle_angular_vel;
 	car.SetVehicleSpeed(req_speed);
-	vehicle_angular_vel = req_speed/car.GetWheelBase()*tan(car.GetHeading()*M_PI/180);
+	vehicle_angular_vel = (req_speed/car.GetWheelBase())*tan(car.GetHeading()*M_PI/180);
+	double a = sin(car.GetLeftAngle()*M_PI/180);
+	double b = sin(car.GetRightAngle()*M_PI/180);
 	if(desired_heading < 0){
-		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(car.GetLeftAngle()*M_PI/180))*180/M_PI);
-		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(car.GetRightAngle()*M_PI/180))*180/M_PI);
+		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(a))*180/M_PI);
+		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(b))*180/M_PI);
 
 	} else{
-		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(car.GetLeftAngle()*M_PI/180))*180/M_PI);
-		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(car.GetRightAngle()*M_PI/180))*180/M_PI);
+		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(a))*180/M_PI);
+		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(b))*180/M_PI);
 	}
 }
 
 void AckermannController::CalculateWheelAngles(double req_heading){
-	if(req_heading>45){ req_heading = 45; }
 	car.SetVehicleHeading(req_heading);
+	if(req_heading>45){ req_heading = 45; }
 	double inner = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	inner = inner*180/M_PI;
 	double outer = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180)));
@@ -96,14 +98,14 @@ void AckermannController::Solve(){
 		CalculateWheelVelocities(req_vel);
 
 		CalculateVehicleSpeed();
+		if (car.GetSpeed() > desired_speed){
+			car.SetVehicleSpeed(desired_speed);
+		}
 		CalculateVehicleHeading();
 		std::cout << "Heading: " << car.GetHeading() << std::endl;
 		std::cout << "Speed: " << car.GetSpeed() << std::endl;
 
-		if (car.GetSpeed() > desired_speed){
-			car.SetVehicleSpeed(desired_speed);
-		}
-		if (car.GetHeading() - desired_heading < 5 ){
+		if (desired_heading - car.GetHeading() < 5 ){
 			flag = false;
 		}
 	}

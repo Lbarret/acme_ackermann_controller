@@ -6,10 +6,10 @@
 int main()
 {
 	Robot robo(.3, 1, .15, 0, 0, 0, 0);
-	PID vel_pid(.1, 0, .2);
-	PID head_pid(.1, 0, .2);
+	PID vel_pid(.1, 0, .1);
+	PID head_pid(.1, 0, .1);
 	AckermannController control(robo,vel_pid, head_pid);
-	control.SetDesiredHeading(40);
+	control.SetDesiredHeading(80);
 	control.SetDesiredSpeed(10);
 	control.Solve();
 
