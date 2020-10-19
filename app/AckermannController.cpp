@@ -14,6 +14,7 @@ AckermannController::AckermannController(Robot robot, PID vel_PID, PID heading_P
 	heading_control = heading_PID;
 	desired_speed = 0;
 	desired_heading = 0;
+	timestamp = .01;
 }
 void AckermannController::SetDesiredSpeed(double speed){
 
@@ -44,7 +45,8 @@ void AckermannController::CalculateVehicleHeading(){
 }
 
 void AckermannController::CalculateWheelVelocities(double req_speed){
-	double vehicle_angular_vel, inner, outer;
+	double vehicle_angular_vel;
+	car.SetVehicleSpeed(req_speed);
 	vehicle_angular_vel = req_speed/car.GetWheelBase()*tan(car.GetHeading()*M_PI/180);
 	if(desired_heading < 0){
 		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(car.GetLeftAngle()*M_PI/180))*180/M_PI);
@@ -57,7 +59,8 @@ void AckermannController::CalculateWheelVelocities(double req_speed){
 }
 
 void AckermannController::CalculateWheelAngles(double req_heading){
-	if(req_heading>45){ req_heading = 45 }
+	if(req_heading>45){ req_heading = 45; }
+	car.SetVehicleHeading(req_heading);
 	double inner = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	inner = inner*180/M_PI;
 	double outer = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180)));
@@ -73,8 +76,28 @@ void AckermannController::CalculateWheelAngles(double req_heading){
 }
 
 void AckermannController::Solve(){
-	double current_error_vel;
+	double prev_error_vel = 0;
+	double current_error_vel = 1;
+	double prev_error_heading = 0;
+	double current_error_heading;
+	double req_heading = 0;
+	double req_vel = 0;
+	while(current_error_vel > .5 && current_error_heading > 5 && current_error_heading < 0){
 
+		prev_error_heading = current_error_heading;
+		current_error_heading = desired_heading - car.GetHeading();
+		req_heading = car.GetHeading() + heading_control.GetKp()*current_error_heading + heading_control.GetKd()*(current_error_heading-prev_error_heading);
+		CalculateWheelAngles(req_heading);
 
+		prev_error_vel = current_error_vel;
+		current_error_vel = desired_speed - car.GetSpeed();
+		req_vel = car.GetSpeed() + velocity_control.GetKp()*current_error_vel + heading_control.GetKd()*(current_error_vel-prev_error_vel);
+		CalculateWheelVelocities(req_vel);
+
+		CalculateVehicleSpeed();
+		CalculateVehicleHeading();
+		std::cout << "Heading: " << car.GetHeading() << std::endl;
+		std::cout << "Speed: " << car.GetSpeed() << std::endl;
+	}
 }
 
