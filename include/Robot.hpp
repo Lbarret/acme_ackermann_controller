@@ -1,18 +1,22 @@
 /**
- * @file Robot.hpp
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
- * @date 2020-10-18
- * 
- * @copyright Copyright (c) 2020
- * 
+ * @file       robot.hpp
+ * @version    1.0
+ * @brief      This file is the main function which instantiate the object and implemets the function.
+ * @created on 20th Oct 2020
+ * @copyright  Copyright 2020. All rights reserved
+ * @Author :   Divyam Garg (Driver), Loic Barret (Navigator), Aditya Goswami (Design Keeper),
  */
 
 #pragma once
 
+// c++ header file
 #include <iostream>
 
+/**
+ * The robot class has variables for each of the term as well as time
+ * interval and error variables. It has the method to implement PID controller to achieve the
+ * desired goal and methods to get the error variables and time interval.
+ */
 class Robot {
 public:
  Robot();
