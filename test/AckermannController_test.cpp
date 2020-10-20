@@ -36,6 +36,6 @@ TEST(AckermannController_test, AckermannController_SetDesiredHeading_test){
 
 TEST(AckermannController_test, AckermannController_Solve_test){
 	control.Solve();
-	EXPECT_DOUBLE_EQ(control.GetDesiredHeading(), control.car.GetHeading());
-	EXPECT_DOUBLE_EQ(control.GetDesiredSpeed(), control.car.GetSpeed());
+	EXPECT_NEAR(control.GetDesiredHeading(), control.car.GetHeading(), 5.0);
+	EXPECT_NEAR(control.GetDesiredSpeed(), control.car.GetSpeed(), 5.0);
 }
