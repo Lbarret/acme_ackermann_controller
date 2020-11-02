@@ -27,7 +27,7 @@ int main() {
 	//In control object heading is set
 	control.SetDesiredHeading(80);
 	//In control object speed is set
-	control.SetDesiredSpeed(10);
+	control.SetDesiredSpeed(20);
 	//solver is called to converge the set speed and angles to desired output
 	control.Solve();
 }

@@ -160,7 +160,7 @@ void AckermannController::Solve() {
 
 		prev_error_vel = current_error_vel;
 		current_error_vel = desired_speed - car.GetSpeed();
-		req_vel = car.GetSpeed() + velocity_control.GetKp()*current_error_vel + heading_control.GetKd()*(current_error_vel-prev_error_vel);
+		req_vel = car.GetSpeed() + velocity_control.GetKp()*current_error_vel + velocity_control.GetKd()*(current_error_vel-prev_error_vel);
 		CalculateWheelVelocities(req_vel);
 
 		CalculateVehicleSpeed();
@@ -171,7 +171,7 @@ void AckermannController::Solve() {
 		std::cout << "Heading: " << car.GetHeading() << std::endl;
 		std::cout << "Speed: " << car.GetSpeed() << std::endl;
 
-		if (desired_heading - car.GetHeading() < 5 ) {
+		if (desired_heading - car.GetHeading() < 5) {
 			flag = false;
 		}
 	}
