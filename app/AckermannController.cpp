@@ -12,6 +12,11 @@
 #include "../include/Robot.hpp"
 #include "../include/PID.hpp"
 #include <cmath>
+#include <ctime>
+#include <ratio>
+#include <chrono>
+#include <unistd.h>
+
 
 // c++ header file
 #include <iostream>
@@ -152,7 +157,7 @@ void AckermannController::Solve() {
 	double req_vel = 0;
 	bool flag = true;
 	while (flag) {
-
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 		prev_error_heading = current_error_heading;
 		current_error_heading = desired_heading - car.GetHeading();
 		req_heading = car.GetHeading() + heading_control.GetKp()*current_error_heading + heading_control.GetKd()*(current_error_heading-prev_error_heading);
@@ -174,5 +179,13 @@ void AckermannController::Solve() {
 		if (desired_heading - car.GetHeading() < 5) {
 			flag = false;
 		}
+		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+		//std::cout << time_span.count() << std::endl;
+		usleep(10000 - time_span.count()*1000000);
+		std::chrono::high_resolution_clock::time_point total = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> time_span_total = std::chrono::duration_cast<std::chrono::duration<double>>(total - start);
+		//std::cout<< time_span_total.count() << std::endl;
+		
 	}
 }
