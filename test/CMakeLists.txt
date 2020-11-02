@@ -3,7 +3,12 @@ set(GTEST_SHUFFLE 1)
 add_executable(
     cpp-test
     main.cpp
-    test.cpp
+    Robot_test.cpp
+    PID_test.cpp
+    AckermannController_test.cpp
+    ../app/Robot.cpp
+    ../app/PID.cpp
+    ../app/AckermannController.cpp
 )
 
 target_include_directories(cpp-test PUBLIC ../vendor/googletest/googletest/include 
