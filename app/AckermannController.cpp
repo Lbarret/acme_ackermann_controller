@@ -82,7 +82,7 @@ desired_heading = heading;
  * @return none
  */
 void AckermannController::CalculateVehicleSpeed() {
-	car.SetVehicleSpeed((car.GetLeftVel()+car.GetRightVel())*car.GetWheelSize()*M_PI/2);
+	car.SetVehicleSpeed((car.GetLeftVel()+car.GetRightVel())/2*car.GetWheelSize()*M_PI/2);
 }
 
 /**
@@ -105,18 +105,27 @@ void AckermannController::CalculateVehicleHeading() {
  */
 void AckermannController::CalculateWheelVelocities(double req_speed) {
 	double vehicle_angular_vel;
-	car.SetVehicleSpeed(req_speed);
+	std::cout << "req_speed: " << req_speed << std::endl;
+	//car.SetVehicleSpeed(req_speed);
 	vehicle_angular_vel = (req_speed/car.GetWheelBase())*tan(car.GetHeading()*M_PI/180);
-	double a = sin(car.GetLeftAngle()*M_PI/180);
-	double b = sin(car.GetRightAngle()*M_PI/180);
-	if(desired_heading < 0){
-		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(a))*180/M_PI);
-		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(b))*180/M_PI);
+	std::cout << "vehicle_angular_vel: " << vehicle_angular_vel << std::endl;
+	double a = car.GetLeftAngle()*M_PI/180;
+	double b = car.GetRightAngle()*M_PI/180;
+	if(car.GetHeading() == 0){
 
-	} else{
-		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(a))*180/M_PI);
-		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(b))*180/M_PI);
+	  car.SetLeftVel(req_speed);
+	  car.SetRightVel(req_speed);
+
+
+	} else if(desired_heading < 0){
+		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(a)));
+		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(b)));
+    
+	}else{
+		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) + car.GetTrackWidth()/2)/(asin(a)));
+		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase()/tan(car.GetHeading()*M_PI/180) - car.GetTrackWidth()/2)/(asin(b)));
 	}
+	std::cout << "left " << car.GetLeftVel() << " right " << car.GetRightVel() << std::endl; 
 }
 
 /**
@@ -125,15 +134,18 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
  * @return none
  */
 void AckermannController::CalculateWheelAngles(double req_heading) {
-	car.SetVehicleHeading(req_heading);
+	//car.SetVehicleHeading(req_heading);
 	if (req_heading>45) {
 		req_heading = 45;
 	}
 
 	double inner = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	inner = inner*180/M_PI;
+	std::cout << "inner = " << inner << std::endl;
 	double outer = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	outer = outer*180/M_PI;
+	std::cout << "outer = " << outer << std::endl;
+
 	if (desired_heading > 0) {
 		car.SetLeftAngle(outer);
 		car.SetRightAngle(inner);
@@ -165,6 +177,7 @@ void AckermannController::Solve() {
 
 		prev_error_vel = current_error_vel;
 		current_error_vel = desired_speed - car.GetSpeed();
+		//std::cout << "speed1: " << car.GetSpeed() << std::endl;
 		req_vel = car.GetSpeed() + velocity_control.GetKp()*current_error_vel + velocity_control.GetKd()*(current_error_vel-prev_error_vel);
 		CalculateWheelVelocities(req_vel);
 
@@ -173,10 +186,11 @@ void AckermannController::Solve() {
 			car.SetVehicleSpeed(desired_speed);
 		}
 		CalculateVehicleHeading();
+		std::cout << "Desired Heading: " << desired_heading << std::endl;
 		std::cout << "Heading: " << car.GetHeading() << std::endl;
 		std::cout << "Speed: " << car.GetSpeed() << std::endl;
 
-		if (desired_heading - car.GetHeading() < 5) {
+		if (abs(desired_heading - car.GetHeading()) < 5 && abs(desired_speed - car.GetSpeed()) < 1) {
 			flag = false;
 		}
 		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
