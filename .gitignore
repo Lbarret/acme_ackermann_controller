@@ -9,3 +9,5 @@ build/
 
 # Python
 *.pyc
+
+.vscode/
