@@ -19,9 +19,9 @@ int main() {
 	// Robot parameterized constructor creates object and sets values
 	Robot robo(.3, 1, .15, 0, 0, 0, 0);
 	// Setter function is called to set the target velocity and actual velocity
-	PID vel_pid(2, 0, .1);
+	PID vel_pid(.25, 0, .1);
 	// Setter function is called to set the target velocity and actual velocity
-	PID head_pid(2, 0, .1);
+	PID head_pid(.25, 0, .1);
 	//control object is created for ackermann controller
 	AckermannController control(robo,vel_pid, head_pid);
 	//In control object heading is set

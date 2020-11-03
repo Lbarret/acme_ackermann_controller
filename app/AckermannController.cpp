@@ -135,16 +135,20 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
  */
 void AckermannController::CalculateWheelAngles(double req_heading) {
 	//car.SetVehicleHeading(req_heading);
-	std::cout << "req_heading " << car.GetHeading() << std::endl; 
-	if (req_heading>45) {
-		req_heading = 45;
-	}
+	std::cout << "req_heading " << req_heading << std::endl; 
+	
 
 	double inner = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	inner = inner*180/M_PI;
+	if (inner > 45){
+		inner = 45;
+	}
 	std::cout << "inner = " << inner << std::endl;
 	double outer = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180)));
 	outer = outer*180/M_PI;
+	if (outer > 45){
+		outer = 45;
+	}
 	std::cout << "outer = " << outer << std::endl;
 
 	if (desired_heading > 0) {
