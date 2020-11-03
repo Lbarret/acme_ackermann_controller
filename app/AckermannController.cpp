@@ -1,10 +1,10 @@
 /**
  * @file       ackermann_controller.cpp
- * @version    1.0
+ * @version    Iteration 2
  * @brief      This file is the main function which instantiate the object and implemets the function.initialising robot class and pid class: pid_speed, pid_heading
- * @created on 20th Oct 2020
+ * @created on 3rd Nov 2020
  * @copyright  Copyright 2020. All rights reserved
- * @Author :   Divyam Garg (Driver), Loic Barret (Navigator), Aditya Goswami (Design Keeper),
+ * @Author :   Loic Barret (Driver), Aditya Goswami (Navigator), Divyam Garg (Design Keeper),
  */
 
 // user defined header files for ackermann controller, robot state and pid control.
@@ -47,7 +47,7 @@ AckermannController::AckermannController(Robot robot, PID vel_PID, PID heading_P
 }
 
 /**
- * @brief      Next two functions return values of desired_speed and desired_heading
+ * @brief      Next two getter functions return values of desired_speed and desired_heading
  * @param      none
  * @return     Desired Speed
  * @return     Desired Heading
@@ -55,7 +55,7 @@ AckermannController::AckermannController(Robot robot, PID vel_PID, PID heading_P
 double AckermannController::GetDesiredSpeed() {
 	return desired_speed;
 }
-//getter
+
 double AckermannController::GetDesiredHeading() {
 	return desired_heading;
 }
@@ -94,11 +94,9 @@ void AckermannController::CalculateVehicleSpeed() {
  */
 void AckermannController::CalculateVehicleHeading() {
 
-	car.SetVehicleHeading(car.GetHeading() + car.GetSpeed()/car.GetWheelBase()*(2*car.GetWheelBase()+car.GetTrackWidth() * atan(car.GetLeftAngle()*M_PI/180))/(2*car.GetWheelBase()*atan(car.GetLeftAngle()*M_PI/180))*timestamp);
-	/*if(desired_heading > 0){
-		car.SetVehicleHeading(-car.GetHeading());
-	}*/
-}
+	car.SetVehicleHeading(car.GetHeading() + car.GetSpeed()/car.GetWheelBase()*(2*car.GetWheelBase()
+	+ car.GetTrackWidth() * atan(car.GetLeftAngle()*M_PI/180))/(2*car.GetWheelBase()*atan(car.GetLeftAngle()*M_PI/180))*timestamp);
+	}
 
 /**
  * @brief This function calculates the velocities of each wheel.
@@ -107,18 +105,15 @@ void AckermannController::CalculateVehicleHeading() {
  */
 void AckermannController::CalculateWheelVelocities(double req_speed) {
 	double vehicle_angular_vel;
-	//std::cout << "req_speed: " << req_speed << std::endl;
-	//car.SetVehicleSpeed(req_speed);
 	double r = (car.GetWheelBase()/sin(car.GetHeading()*M_PI/180));
 	vehicle_angular_vel = req_speed/r;
-	//std::cout << "vehicle_angular_vel: " << vehicle_angular_vel << std::endl;
-	if(car.GetHeading() == 0){
+	if(car.GetHeading() == 0) {
 
 	  car.SetLeftVel(req_speed);
 	  car.SetRightVel(req_speed);
 
 
-	} else if(desired_heading < 0){
+	} else if(desired_heading < 0) {
 
 		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetLeftAngle()*M_PI/180)));
 		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetRightAngle()*M_PI/180)));
@@ -127,7 +122,6 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
 		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetLeftAngle()*M_PI/180)));
 		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetRightAngle()*M_PI/180)));
 	}
-	//std::cout << "left " << car.GetLeftVel() << " right " << car.GetRightVel() << std::endl; 
 }
 
 /**
@@ -136,22 +130,18 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
  * @return none
  */
 void AckermannController::CalculateWheelAngles(double req_heading) {
-	//car.SetVehicleHeading(req_heading);
-	//std::cout << "req_heading " << req_heading << std::endl; 
-	
-
-	double inner = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180), 2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180));
+	double inner = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180), 2*car.GetWheelBase()*cos(req_heading*M_PI/180)
+	- car.GetTrackWidth()*sin(req_heading*M_PI/180));
 	inner = inner*180/M_PI;
 	if (inner > 45){
 		inner = 45;
 	}
-	//std::cout << "inner = " << inner << std::endl;
+
 	double outer = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180),2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180));
 	outer = outer*180/M_PI;
 	if (outer > 45){
 		outer = 45;
 	}
-	//std::cout << "outer = " << outer << std::endl;
 
 	if (desired_heading > 0) {
 		car.SetLeftAngle(outer);
@@ -206,7 +196,6 @@ void AckermannController::Solve() {
 
 		prev_error_vel = current_error_vel;
 		current_error_vel = desired_speed - car.GetSpeed();
-		//std::cout << "speed1: " << car.GetSpeed() << std::endl;
 		req_vel = car.GetSpeed() + velocity_control.GetKp()*current_error_vel + velocity_control.GetKd()*(current_error_vel-prev_error_vel);
 		CalculateWheelVelocities(req_vel);
 
@@ -216,7 +205,6 @@ void AckermannController::Solve() {
 		}
 		CalculateVehicleHeading();
 		
-		//std::cout << "Desired Heading: " << desired_heading << std::endl;
 		std::cout << "Heading: "<< car.GetHeading() << std::endl;
 		std::cout << "Speed: "<< car.GetSpeed() << std::endl;
 
@@ -225,13 +213,11 @@ void AckermannController::Solve() {
 		}
 		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-		//std::cout << time_span.count() << std::endl;
 		usleep(10000 - time_span.count()*1000000);
 		std::chrono::high_resolution_clock::time_point total = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span_total = std::chrono::duration_cast<std::chrono::duration<double>>(total - beginning);
 		std::cout<< "Time = " << time_span_total.count() << std::endl << std::endl;
 		iteration++;
-		//std::cout << iteration << endl;
 
 		if (iteration % 10 == 0) {
 			time_x.push_back(time_span_total.count());

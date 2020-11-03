@@ -1,10 +1,10 @@
 /**
  * @file       robot_state.cpp
- * @version    1.0
+ * @version    Iteration 2
  * @brief      This file is the main function which instantiate the object and implemets the function.
- * @created on 20th Oct 2020
+ * @created on 3rd Nov 2020
  * @copyright  Copyright 2020. All rights reserved
- * @Author :   Divyam Garg (Driver), Loic Barret (Navigator), Aditya Goswami (Design Keeper),
+ * @Author :   Loic Barret (Driver), Aditya Goswami (Navigator), Divyam Garg (Design Keeper),
  */
 
 // user defined header files for robot state

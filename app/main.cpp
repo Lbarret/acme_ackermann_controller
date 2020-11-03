@@ -1,10 +1,10 @@
 /**
  * @file       main.cpp
- * @version    1.0
+ * @version    Iteration 2
  * @brief      This file is the main function which instantiate the object and implemets the function.
- * @created on 20th Oct 2020
+ * @created on 3rd Nov 2020
  * @copyright  Copyright 2020. All rights reserved
- * @Author :   Divyam Garg (Driver), Loic Barret (Navigator), Aditya Goswami (Design Keeper),
+ * @Author :   Loic Barret (Driver), Aditya Goswami (Navigator), Divyam Garg (Design Keeper),
  */
 
 // user defined header files for PID Controller, ackermann controller and robot state
@@ -27,12 +27,12 @@ int main() {
 	//control object is created for ackermann controller
 	AckermannController control(robo,vel_pid, head_pid);
 
-	std::cout << "Input Desired Heading [deg]: ";
+	std::cout << "Input Desired Heading [deg] (example = 80): ";
 	std::cin >> des_heading;
 	//In control object heading is set
 	control.SetDesiredHeading(des_heading);
 
-	std::cout << "Input Desired Speed [m/s]: ";
+	std::cout << "Input Desired Speed [m/s] (example = 20): ";
 	std::cin >> des_speed;
 	//In control object speed is set
 	control.SetDesiredSpeed(des_speed);
