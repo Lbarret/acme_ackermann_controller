@@ -15,6 +15,9 @@
 #include <ratio>
 #include <chrono>
 #include <unistd.h>
+#include "../include/supportLib.hpp"
+#include "../include/pbPlots.hpp"
+#include <vector>
 
 
 // c++ header file
@@ -134,7 +137,7 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
  */
 void AckermannController::CalculateWheelAngles(double req_heading) {
 	//car.SetVehicleHeading(req_heading);
-	std::cout << "req_heading " << req_heading << std::endl; 
+	//std::cout << "req_heading " << req_heading << std::endl; 
 	
 
 	double inner = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180), 2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180));
@@ -142,13 +145,13 @@ void AckermannController::CalculateWheelAngles(double req_heading) {
 	if (inner > 45){
 		inner = 45;
 	}
-	std::cout << "inner = " << inner << std::endl;
+	//std::cout << "inner = " << inner << std::endl;
 	double outer = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180),2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180));
 	outer = outer*180/M_PI;
 	if (outer > 45){
 		outer = 45;
 	}
-	std::cout << "outer = " << outer << std::endl;
+	//std::cout << "outer = " << outer << std::endl;
 
 	if (desired_heading > 0) {
 		car.SetLeftAngle(outer);
@@ -157,6 +160,21 @@ void AckermannController::CalculateWheelAngles(double req_heading) {
 		car.SetLeftAngle(inner);
 		car.SetRightAngle(outer);
 	}
+}
+
+/**
+ * @brief This function plots the outputs.
+ * @param x, y, name
+ * @return none
+ */
+void AckermannController::plot(std::vector<double> x, std::vector<double> y, std::string name){
+	RGBABitmapImageReference *imageReference = CreateRGBABitmapImageReference();
+
+	DrawScatterPlot(imageReference, 600, 400, &x, &y);
+    
+    vector<double> *pngdata = ConvertToPNG(imageReference->image);
+    WriteToFile(pngdata, name);
+    DeleteImage(imageReference->image);
 }
 
 /**
@@ -172,6 +190,10 @@ void AckermannController::Solve() {
 	double req_heading = 0;
 	double req_vel = 0;
 	bool flag = true;
+	int iteration = 0;
+	std::vector<double> heading_y;
+	std::vector<double> speed_y;
+	std::vector<double> time_x;
 	
     std::chrono::high_resolution_clock::time_point beginning = std::chrono::high_resolution_clock::now();
 	
@@ -208,7 +230,21 @@ void AckermannController::Solve() {
 		std::chrono::high_resolution_clock::time_point total = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span_total = std::chrono::duration_cast<std::chrono::duration<double>>(total - beginning);
 		std::cout<< "Time = " << time_span_total.count() << std::endl << std::endl;
-		
+		iteration++;
+		//std::cout << iteration << endl;
+
+		if (iteration % 10 == 0) {
+			time_x.push_back(time_span_total.count());
+			heading_y.push_back(car.GetHeading());
+			speed_y.push_back(car.GetSpeed());
+		}
 
 	}
+	std::string heading_plot = "heading_plot.png";
+	std::string speed_plot = "speed_plot.png";
+
+	plot(time_x, heading_y, heading_plot);
+	plot(time_x, speed_y, speed_plot);
+
 }
+

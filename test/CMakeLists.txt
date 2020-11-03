@@ -9,6 +9,9 @@ add_executable(
     ../app/Robot.cpp
     ../app/PID.cpp
     ../app/AckermannController.cpp
+    ../app/pbPlots.cpp
+    ../app/supportLib.cpp
+
 )
 
 target_include_directories(cpp-test PUBLIC ../vendor/googletest/googletest/include 
