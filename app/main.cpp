@@ -16,6 +16,8 @@
 #include <iostream>
 
 int main() {
+
+	float des_heading = 0, des_speed = 0;
 	// Robot parameterized constructor creates object and sets values
 	Robot robo(.3, 1, .15, 0, 0, 0, 0);
 	// Setter function is called to set the target velocity and actual velocity
@@ -24,10 +26,16 @@ int main() {
 	PID head_pid(.25, 0, .1);
 	//control object is created for ackermann controller
 	AckermannController control(robo,vel_pid, head_pid);
+
+	std::cout << "Input Desired Heading [deg]: ";
+	std::cin >> des_heading;
 	//In control object heading is set
-	control.SetDesiredHeading(80);
+	control.SetDesiredHeading(des_heading);
+
+	std::cout << "Input Desired Speed [m/s]: ";
+	std::cin >> des_speed;
 	//In control object speed is set
-	control.SetDesiredSpeed(20);
+	control.SetDesiredSpeed(des_speed);
 	//solver is called to converge the set speed and angles to desired output
 	control.Solve();
 }

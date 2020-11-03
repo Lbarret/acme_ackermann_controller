@@ -12,7 +12,6 @@
 #include "../include/Robot.hpp"
 #include "../include/PID.hpp"
 #include <cmath>
-#include <ctime>
 #include <ratio>
 #include <chrono>
 #include <unistd.h>
@@ -105,11 +104,11 @@ void AckermannController::CalculateVehicleHeading() {
  */
 void AckermannController::CalculateWheelVelocities(double req_speed) {
 	double vehicle_angular_vel;
-	std::cout << "req_speed: " << req_speed << std::endl;
+	//std::cout << "req_speed: " << req_speed << std::endl;
 	//car.SetVehicleSpeed(req_speed);
 	double r = (car.GetWheelBase()/sin(car.GetHeading()*M_PI/180));
 	vehicle_angular_vel = req_speed/r;
-	std::cout << "vehicle_angular_vel: " << vehicle_angular_vel << std::endl;
+	//std::cout << "vehicle_angular_vel: " << vehicle_angular_vel << std::endl;
 	if(car.GetHeading() == 0){
 
 	  car.SetLeftVel(req_speed);
@@ -125,7 +124,7 @@ void AckermannController::CalculateWheelVelocities(double req_speed) {
 		car.SetLeftVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetLeftAngle()*M_PI/180)));
 		car.SetRightVel(vehicle_angular_vel * (car.GetWheelBase())/(sin(car.GetRightAngle()*M_PI/180)));
 	}
-	std::cout << "left " << car.GetLeftVel() << " right " << car.GetRightVel() << std::endl; 
+	//std::cout << "left " << car.GetLeftVel() << " right " << car.GetRightVel() << std::endl; 
 }
 
 /**
@@ -138,13 +137,13 @@ void AckermannController::CalculateWheelAngles(double req_heading) {
 	std::cout << "req_heading " << req_heading << std::endl; 
 	
 
-	double inner = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180)));
+	double inner = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180), 2*car.GetWheelBase()*cos(req_heading*M_PI/180)-car.GetTrackWidth()*sin(req_heading*M_PI/180));
 	inner = inner*180/M_PI;
 	if (inner > 45){
 		inner = 45;
 	}
 	std::cout << "inner = " << inner << std::endl;
-	double outer = atan(2*car.GetWheelBase()*sin(req_heading*M_PI/180)/(2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180)));
+	double outer = atan2(2*car.GetWheelBase()*sin(req_heading*M_PI/180),2*car.GetWheelBase()*cos(req_heading*M_PI/180)+car.GetTrackWidth()*sin(req_heading*M_PI/180));
 	outer = outer*180/M_PI;
 	if (outer > 45){
 		outer = 45;
@@ -173,6 +172,9 @@ void AckermannController::Solve() {
 	double req_heading = 0;
 	double req_vel = 0;
 	bool flag = true;
+	
+    std::chrono::high_resolution_clock::time_point beginning = std::chrono::high_resolution_clock::now();
+	
 	while (flag) {
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 		prev_error_heading = current_error_heading;
@@ -191,11 +193,12 @@ void AckermannController::Solve() {
 			car.SetVehicleSpeed(desired_speed);
 		}
 		CalculateVehicleHeading();
-		std::cout << "Desired Heading: " << desired_heading << std::endl;
-		std::cout << "Heading: " << car.GetHeading() << std::endl;
-		std::cout << "Speed: " << car.GetSpeed() << std::endl;
+		
+		//std::cout << "Desired Heading: " << desired_heading << std::endl;
+		std::cout << "Heading: "<< car.GetHeading() << std::endl;
+		std::cout << "Speed: "<< car.GetSpeed() << std::endl;
 
-		if (abs(desired_heading - car.GetHeading()) < 1 && abs(desired_speed - car.GetSpeed()) < 1) {
+		if (std::abs(desired_heading - car.GetHeading()) < 1 && std::abs(desired_speed - car.GetSpeed()) < 1) {
 			flag = false;
 		}
 		std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
@@ -203,8 +206,9 @@ void AckermannController::Solve() {
 		//std::cout << time_span.count() << std::endl;
 		usleep(10000 - time_span.count()*1000000);
 		std::chrono::high_resolution_clock::time_point total = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> time_span_total = std::chrono::duration_cast<std::chrono::duration<double>>(total - start);
-		//std::cout<< time_span_total.count() << std::endl;
-		std::cout<< std::endl << std::endl;
+		std::chrono::duration<double> time_span_total = std::chrono::duration_cast<std::chrono::duration<double>>(total - beginning);
+		std::cout<< "Time = " << time_span_total.count() << std::endl << std::endl;
+		
+
 	}
 }
