@@ -14,6 +14,8 @@
 
 // c++ header file
 #include <iostream>
+#include <vector> 
+#include <string>
 
 /**
  * The AckermannController class has variables for each of the term as well as time
@@ -33,6 +35,7 @@ public:
 	void CalculateVehicleHeading();
 	void CalculateWheelVelocities(double req_speed);
 	void CalculateWheelAngles(double req_heading);
+	void plot(std::vector<double> x, std::vector<double> y, std::string name);
 	void Solve();
 	Robot car;
 	PID velocity_control;
